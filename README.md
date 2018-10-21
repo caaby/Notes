@@ -1,6 +1,6 @@
 # 项目介绍
 * 名称：notes
-* 官网：http://www.caaby.com
+* 官网：https://www.caaby.com
 * 定位：
 * 特点：
 * 功能：
