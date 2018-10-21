@@ -14,7 +14,7 @@
 
 
 # 代码下载
--[地址](https://github.com/Caaby/Notes)
+-[地址](https://github.com/Caaby/Notes.git)
 
 # 交流
 
