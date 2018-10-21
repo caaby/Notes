@@ -1,0 +1,63 @@
+redirect 重定向
+url_for(函数名字，参数)  反解析函数
+
+自定义状态码
+
+redirect 重定向
+Alt + Enter import 导入模块
+regex 正则
+converter 转换器
+ ctrl +b 追踪
+ lsof -i ：端口号 查看端口进程
+ kill -9 PID  杀死进程
+ requirements 要求  requirements.txt
+ pip freeze >requirements.txt 重定向
+ pip install -r requirements 遍历  安装
+ render 以....回报 
+ protocol  协议书
+ deactivate  使无效  退出
+ handler 处理 捕获
+ abort(状态码) 
+ errorhandler 错误处理函数
+ adapter 适配器
+ start flask 
+ expires 到期时间
+
+ cookie 存储在客户端使用
+ session 存在服务器使用
+ session 依赖cookie
+ secret 加密
+ context 上下文
+ current 当前的
+ g变量 临时的全局变量
+ ctrl +L 
+ render_template
+ macro 宏观的
+ 模板中特有的函数和变量
+ config.debug
+ request.url
+ session.name
+ g.name
+ url_for
+ get_flashed_message
+ Cross Site Request Forgery 跨站点请求伪造
+ transfer 转移
+ relationship 关系
+ validate 验证
+ reduce 减少 降低
+ migrate 移动
+ assert 断言
+ url_prefix url前缀
+ unit 单元
+ expire 断气 终止
+ Strict 严格的
+ master 控制 精通 征服
+ source 来源
+ activate 刺激 激活
+ deactivate 使无效
+ handler 处理器
+ release 发布
+ origin 原产地
+ merge 合并
+ ignore 忽视
+ license 许可证
