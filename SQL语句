@@ -1,0 +1,95 @@
+alter table students(表名) add birthday(列名) datatime(类型); # 修改表 添加字段
+
+alter table students change birthday birth datatime not null; # 修改表 修改字段
+
+alter table students modify birthday datatime not null;  # 修改表 不重命名 修改字段
+
+alter table students drop birthday; # 修改表 删除字段
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+drop table students; # 删除表
+
+show create table students;  # 查看表的创建语句
+
+insert into 表名 values(.......);  # 增加列表数据
+
+insert into 表名 values(....),(.....)； # 一次插入多行数据
+
+insert into 表名(列1，列2...) values(值1，值2...); # 部分列插入
+
+insert into 表名(列1，列2...) values(值1，值2...),(值1，值2...); # 部分列 一次插入多行数据
+
+update 表名 set 列1=值1，列2=值2.....where 条件;  # 表的数据修改
+
+delete from 表名 where 条件;  # 删除表的数据
+
+update 表名 set is_delete where 条件；  # 逻辑删除，本身就是修改操作
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+备份
+mysqldump -uroot -p 数据库名 > python.sql;  # 运行mysqldump命令 备份muysql
+恢复
+连接mysql，创建新的数据库，2，退出连接，执行如下代码
+mysql -uroot -p 新数据库名 < python.sql;
+
+select *from 表名;  # 查询所有列
+select 列1，列2....from 表名; # 查询指定列
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>...
+使用 as 给字段取别名
+
+select id as 序号, name as 名字, gender as 性别 from students;  # 英文起中文别名
+
+select id,name from 表名;  # 单表查询列
+
+select 表名.id, 表名.name from 表名 ;  # 表名查询列
+
+select v.id, v.name from 表名 as v ;  # 通过 as 给表名起别名查询列
+
+select distinct 列1，列2 from 表名 ;   # select 后面添加 distinct 消除重复行
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+select * from 表名 where 条件；  # 条件查询
+
+where 后面支持多种运算符 进行条件的处理：
+	比较运算符 
+		=, >, <, >=, <=, !=(不等于), <>(不等于)，
+	逻辑运算符 
+		and or not，
+	模糊查询 
+		like(好像), %(表示多个任意字符), _(表示一个任意字符)，
+	范围查询 
+		in (表示在一个非连续范围内)
+			select * from students where id in(1, 3, 8);  # 查询id是1，3，8的学生
+		between...and...(表示在一个连续范围内)
+			select * from students where id between 2 and 8;  # 查询id是2到8的学生 包括8
+	空判断 
+		is null(判空), is not null(判非空) 注意(null 与 ""(空字符串)不一样)
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+排序
+
+order by ..names  asc(升序) | desc(降序)； 默认升序
+select * from 表名 order by 列1 asc | desc,列2 asc|desc，列3...
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+统计数据 聚合函数
+	总数 count(* 或者列名)
+	最大值 max(列名)
+	最小值 min(列名)
+	求和 sum(列名)
+	平均值 avg(列名)
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+合并 concat(列名，列名...)
+select concat(id,"," name,","gender) from studens;  # 查询到的id，name,gender合并显示
+select concat_ws(",","id",name) from students;  # 符号卸载前面
+分组
+group by 列名；
+group By + group_concat(列名)；
+	select gender,group_concat(name) from students;  # 显示分组 每个gender 的 name
+group by + 集合函数

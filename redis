@@ -1,0 +1,50 @@
+daemonize 后台运行
+核心配置文件
+绑定ip 
+bind 127.0.0.1
+端口 默认6379
+port 6379
+是否以守护进程运行
+daemonize yes
+数据文件
+dbfilename dump.rdb
+数据文件路径
+dir /var/lib/redis
+日志文件
+logfile "/var/log/redis/redis-server.log"
+
+slave 奴隶
+redis 默认端口 6379
+mysql 默认端口 3306
+permission 许可 认可
+logfile "/var/log/redis/redis-server.log"
+数据库，默认16个
+database 16
+主从备份
+slaveof
+
+启动redis服务：redis-server 配置文件
+启动数据库：redis -cli -h ip地址
+ping >>>PONG 测试命令
+选择数据库：select 数字
+flushdb 清除当前数据库
+flushall 清除所有数据库 0-15
+keys 正则表达式
+expire 满期 终止
+ps aux | grep redis 查看redis服务器进程
+sudo kill -9 pid 杀死redis服务器
+sudo redis server /etc/redis/redis.conf 启动redis 服务端
+sudo server redis stop 关闭服务
+sudo server redis start 开启服务
+set zset 不允许修改
+ttl key 获取key的剩余生存时间，以秒为单位
+exists key  判断对应的key是否存在 如果存在返回1，不存在返回0
+type key 查看key对应值的类型
+键重命名：rename key newkey	——为了防止被强行rename，Redis提供了renamenx命令，确保只有newKey不存在时候才被覆盖
+sadd key menber1 menber2
+追加值
+append key value   # 追加到原有值后面拼接
+smenbers key
+node 节点
+pip install redis-py-cluster 集群安装包
+cluster 群
