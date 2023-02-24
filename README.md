@@ -12,6 +12,7 @@
      
 ![微博偷图](https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1396333094,1484407980&fm=26&gp=0.jpg)
 
+[csr在线生成工具](https://myssl.com/csr_create.html)
 
 # 代码下载
 [地址](https://github.com/Caaby/Notes.git)
