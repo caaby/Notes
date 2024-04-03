@@ -7,11 +7,6 @@
 
 ## 项目框架
 
-
-麻雀虽小五脏俱全，下图如何：
-     
-![微博偷图](https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1396333094,1484407980&fm=26&gp=0.jpg)
-
 ### vCards CN github地址 https://github.com/metowolf/vCards
 #### 导入常用联系人头像，优化 iOS 来电、信息界面体验。
 [下载黄页vcf文件](https://github.com/metowolf/vCards/releases/latest/download/archive.zip)
