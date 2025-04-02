@@ -1,7 +1,3 @@
-#### surge
-```bash
-curl -sSf https://cdn.jsdelivr.net/gh/caaby/Notes@master/surge.sh | sh
-```
 
 ### vCards CN github地址 https://github.com/metowolf/vCards
 #### 导入常用联系人头像，优化 iOS 来电、信息界面体验。
