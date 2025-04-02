@@ -1,4 +1,4 @@
-###mac bash profile
+### mac bash profile
 ```curl -fsSL -o ~/.bash_profile https://raw.githubusercontent.com/caaby/Notes/refs/heads/master/macos/.bash_profile
 ```
 ### vCards CN github地址 https://github.com/metowolf/vCards
