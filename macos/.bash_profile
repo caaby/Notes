@@ -45,8 +45,6 @@ cd() {
 function setup_homebrew() {
     # 判断 Homebrew 是否已安装
     if command -v brew &>/dev/null; then
-        echo "检测到 Homebrew，开始配置环境变量... ✅"
-
         # 设置 Homebrew 的 GitHub API 访问令牌（请勿在公开环境中存储敏感信息）
         export HOMEBREW_GITHUB_API_TOKEN="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"
         
