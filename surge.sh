@@ -1,5 +1,6 @@
 /bin/bash
 
+set -x
 echo "是否全新安装Surge?"
 echo "这将删除你的默认配置信息.请先备份配置信息到其他位置."
 read -p "(y/n,默认n):" option
