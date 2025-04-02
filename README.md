@@ -1,4 +1,4 @@
-#### bash profile
+#### bash_profile
 ``` bash
 curl -fsSL -o ~/.bash_profile "https://raw.githubusercontent.com/caaby/Notes/refs/heads/master/macos/.bash_profile"
 ```
