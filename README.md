@@ -1,12 +1,3 @@
-# 项目介绍
-* 名称：notes
-* 官网：https://www.caaby.com
-* 定位：
-* 特点：
-* 功能：
-
-## 项目框架
-
 #### surge
 ```bash
 curl -sSf https://cdn.jsdelivr.net/gh/caaby/Notes@master/surge.sh | sh
