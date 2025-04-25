@@ -45,9 +45,6 @@ setup_homebrew() {
     if command -v brew &>/dev/null; then
         # 设置 Homebrew 的 GitHub API 访问令牌（请勿在公开环境中存储敏感信息）
         export HOMEBREW_GITHUB_API_TOKEN="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"
-        # 替换 bottle 下载地址
-        export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew-bottles
-        
         export HOMEBREW_NO_ENV_HINTS=1
  
         # 加载 Homebrew 的 shell 环境变量
