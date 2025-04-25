@@ -122,13 +122,23 @@ setup_pyenv() {
     fi
 }
 
-setup_export_env
-setup_env
-setup_ps1
-setup_homebrew
-setup_pyenv
-# 让每次显示提示符前都调用 setup_ps1
-PROMPT_COMMAND=setup_ps1
 
-# 调用函数加载 PyCharm 虚拟机选项
-load_pycharm_vmoptions
+# 自动刷新 PS1 提示符
+auto_refresh_ps1() {
+    export PROMPT_COMMAND="setup_ps1"  # 每次显示新的命令提示符时调用 setup_ps1
+}
+
+# 一键初始化所有环境设置
+setup_all() {
+    setup_export_env  # 设置环境变量
+    setup_env         # 设置路径环境变量
+    setup_homebrew    # 配置 Homebrew
+    setup_pyenv       # 初始化 pyenv
+    setup_ps1         # 设置提示符
+    setup_orbstack    # 初始化 OrbStack
+    load_pycharm_vmoptions  # 加载 PyCharm 配置
+    auto_refresh_ps1  # 启用 PS1 自动刷新
+}
+
+# 调用 setup_all 初始化所有设置
+setup_all
