@@ -3,33 +3,38 @@ setup_export_env() {
     export CLICOLOR=1                          # 启用终端颜色显示
     export LSCOLORS=ExGxFxdaCxDaDahbadeche     # 设置 ls 命令的颜色配置
     export BASH_SILENCE_DEPRECATION_WARNING=1  # 关闭 macOS Bash 过时警告
-    
+    export PYTHONDONTWRITEBYTECODE=1
+}
+
+# 显示虚拟环境名称（如果存在）
+get_venv() {
+    [[ -n "$VIRTUAL_ENV" ]] && echo "($(basename "$VIRTUAL_ENV")) "
 }
 
 # 获取当前 Git 分支（如果存在）
 get_git_branch() {
     local branch
-    # 尝试获取当前 Git 分支，若失败则返回空字符串
     branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
-    # 如果分支存在，则返回分支名称
-    [ -n "$branch" ] && echo "($branch)"
+    [[ -n "$branch" ]] && echo "($branch)"
 }
 
-# 更新 PS1 提示符
+# 更新 PS1 提示符（venv 放最前，保留 IP 逻辑）
 setup_ps1() {
-    # 定义颜色变量
     local GREEN='\033[0;32m'
     local YELLOW='\033[0;33m'
     local CYAN='\033[0;36m'
     local DEFAULT='\033[0m'
 
-    # 如果当前目录是 Git 仓库内
+    local venv="$(get_venv)"
+    local git_branch="$(get_git_branch)"
+
     if git rev-parse --is-inside-work-tree &>/dev/null; then
-        # 在 Git 仓库中，显示 Git 用户、工作目录和 Git 分支
-        export PS1="${GREEN}\u@${YELLOW}\w${CYAN}$(get_git_branch)${DEFAULT}\n\$ "
+        # Git 仓库中
+        export PS1="${CYAN}${venv}${GREEN}\u@${YELLOW}\w ${CYAN}${git_branch}${DEFAULT}\n\$ "
     else
-        # 不在 Git 仓库中，显示主机名、工作目录
-        export PS1="${GREEN}\u@$(ipconfig getifaddr en0)${YELLOW}\w${CYAN}${DEFAULT}\n\$ "
+        # 非 Git 仓库中
+        local ip="$(ipconfig getifaddr en0 2>/dev/null || echo 'no-ip')"
+        export PS1="${CYAN}${venv}${GREEN}\u@${ip}${YELLOW}\w ${DEFAULT}\n\$ "
     fi
 }
 
@@ -40,10 +45,11 @@ setup_homebrew() {
     if command -v brew &>/dev/null; then
         # 设置 Homebrew 的 GitHub API 访问令牌（请勿在公开环境中存储敏感信息）
         export HOMEBREW_GITHUB_API_TOKEN="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"
+        # 替换 bottle 下载地址
+        export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew-bottles
         
-        # 配置 Homebrew 使用阿里云镜像加速下载
-        export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.aliyun.com/homebrew-bottles"
-
+        export HOMEBREW_NO_ENV_HINTS=1
+ 
         # 加载 Homebrew 的 shell 环境变量
         eval "$(/usr/local/Homebrew/bin/brew shellenv)"
 
@@ -103,18 +109,26 @@ proxy_on() {
     echo -e "已开启代理"
 }
 
+setup_orbstack() {
+    [[ -f ~/.orbstack/shell/init.bash ]] && source ~/.orbstack/shell/init.bash
+}
 
-# 改进的 cd 命令，进入目录时自动更新 PS1
-cd() {
-    # 执行默认的 cd 命令
-    builtin cd "$@"  
-    # 进入新的目录时，自动更新提示符
-    setup_ps1
+setup_pyenv() {
+    if command -v pyenv &>/dev/null; then
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+        eval "$(pyenv init -)"
+    fi
 }
 
 setup_export_env
 setup_env
 setup_ps1
 setup_homebrew
+setup_pyenv
+# 让每次显示提示符前都调用 setup_ps1
+PROMPT_COMMAND=setup_ps1
+
 # 调用函数加载 PyCharm 虚拟机选项
 load_pycharm_vmoptions
