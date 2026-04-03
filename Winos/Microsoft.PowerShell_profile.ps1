@@ -12,18 +12,27 @@ function prompt {
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode vi
 
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle Inline
+Set-PSReadLineKeyHandler -Key Tab -Function AcceptSuggestion
+
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
 Set-PSReadLineOption -MaximumHistoryCount 4000
 Set-PSReadLineOption -HistoryNoDuplicates
+
 # history substring search
 Set-PSReadlineKeyHandler -Key   UpArrow         -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key   DownArrow       -Function HistorySearchForward
 
-# Tab completion
-Set-PSReadlineKeyHandler -Chord 'Shift+Tab'     -Function Complete
-Set-PSReadlineKeyHandler -Key   Tab             -Function MenuComplete
+# Tab = 正常补全
+Set-PSReadlineKeyHandler -Key Tab -Function Complete
 
+# Shift+Tab = 反向补全
+Set-PSReadlineKeyHandler -Chord Shift+Tab -Function MenuComplete
+
+# 右方向键 = 接受预测（Linux标准！）
+Set-PSReadLineKeyHandler -Key RightArrow -Function AcceptSuggestion
 
 Set-PSReadLineKeyHandler -Key   Alt+Backspace   -Function BackwardKillWord
 Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord
