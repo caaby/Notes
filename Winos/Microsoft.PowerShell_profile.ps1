@@ -9,6 +9,10 @@ function prompt {
   gitFancyPrompt
 }
 
+if (Get-Module -ListAvailable Terminal-Icons) {
+    Import-Module Terminal-Icons
+}
+
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode vi
 
