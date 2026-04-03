@@ -50,17 +50,6 @@ Set-PSReadLineKeyHandler -Key   Ctrl+w          -Function BackwardKillWord
 Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually
 Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout
 
-Set-PSReadlineKeyHandler -Chord 'Ctrl+v' -ScriptBlock {
-  $clipboard = Get-Clipboard -Raw
-  if ($clipboard -match '^\s*(http|ftp|magnet)' -or `
-    ($clipboard.trim().StartsWith("C:\")) -or `
-    ($clipboard.trim().StartsWith("C:/"))) {
-    $clipboard = $clipboard.Trim()
-    $clipboard = "`"${clipboard}`""
-  }
-  [Microsoft.PowerShell.PSConsoleReadLine]::Insert($clipboard)
-}
-
 function unzip {
     param($zipfile)
     Expand-Archive $zipfile -DestinationPath .
