@@ -12,9 +12,12 @@ function prompt {
 }
 
 # 如果安装了 Terminal-Icons，自动加载（文件图标美化）
-if (Get-Module -ListAvailable Terminal-Icons) {
-    Import-Module Terminal-Icons
-}
+# 判断是否为远程 SSH 会话
+if ($env:TERM -notin @('xterm-256color', 'screen-256color', 'linux') -and
+    (Get-Module -ListAvailable -Name Terminal-Icons)) {
+    Import-Module Terminal-Icons -ErrorAction SilentlyContinue
+    }
+
 
 # 加载 PSReadLine 命令行增强模块
 Import-Module PSReadLine
@@ -26,6 +29,8 @@ Set-PSReadLineOption -EditMode vi
 # 老版 Windows PowerShell 可能不支持，报错就注释掉下面两行
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle Inline
+
+
 
 # Tab 键接受自动预测建议
 Set-PSReadLineKeyHandler -Key Tab -Function AcceptSuggestion
