@@ -107,7 +107,6 @@ function check-proxy {
 }
 
 Set-Alias ll ls
-Set-Alias la "ls -Force"
 Set-Alias grep Select-String
 Set-Alias which Get-Command
 Set-Alias touch New-Item
