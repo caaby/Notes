@@ -2,65 +2,76 @@
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
+# 获取当前配置文件所在目录
 $scriptDir = Split-Path -PaTh $MyInvocation.MyCommand.Definition -Parent
 
+# 加载自定义 Git 美化提示符
 import-module $scriptDir\prompt.psm1
 function prompt {
   gitFancyPrompt
 }
 
+# 如果安装了 Terminal-Icons，自动加载（文件图标美化）
 if (Get-Module -ListAvailable Terminal-Icons) {
     Import-Module Terminal-Icons
 }
 
+# 加载 PSReadLine 命令行增强模块
 Import-Module PSReadLine
+
+# 启用 Vim 编辑模式（ESC 进入命令模式）
 Set-PSReadLineOption -EditMode vi
 
+# 命令预测补全（根据历史记录提示）
+# 老版 Windows PowerShell 可能不支持，报错就注释掉下面两行
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle Inline
+
+# Tab 键接受自动预测建议
 Set-PSReadLineKeyHandler -Key Tab -Function AcceptSuggestion
 
-Set-PSReadLineOption -HistorySearchCursorMovesToEnd
-Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
-Set-PSReadLineOption -MaximumHistoryCount 4000
-Set-PSReadLineOption -HistoryNoDuplicates
+# 历史记录设置
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd  # 搜索历史时光标跳到最后
+Set-PSReadLineOption -HistorySaveStyle SaveIncrementally  # 实时保存历史
+Set-PSReadLineOption -MaximumHistoryCount 1000  # 最大历史记录数
+Set-PSReadLineOption -HistoryNoDuplicates  # 不保存重复历史
 
-# history substring search
+# 上下箭头 = 搜索历史命令
 Set-PSReadlineKeyHandler -Key   UpArrow         -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key   DownArrow       -Function HistorySearchForward
 
-# Tab = 正常补全
+# Tab = 普通补全
 Set-PSReadlineKeyHandler -Key Tab -Function Complete
 
 # Shift+Tab = 反向补全
 Set-PSReadlineKeyHandler -Chord Shift+Tab -Function MenuComplete
 
-# 右方向键 = 接受预测（Linux标准！）
+# 右方向键 = 接受预测
 Set-PSReadLineKeyHandler -Key RightArrow -Function AcceptSuggestion
 
-Set-PSReadLineKeyHandler -Key   Alt+Backspace   -Function BackwardKillWord
-Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord
-Set-PSReadLineKeyHandler -Key   Alt+d           -Function KillWord
-Set-PSReadLineKeyHandler -Key   Alt+f           -Function ForwardWord
-Set-PSReadLineKeyHandler -Key   Ctrl+a          -Function BeginningOfLine
-Set-PSReadLineKeyHandler -Key   Ctrl+b          -Function BackwardChar
-Set-PSReadLineKeyHandler -Key   Ctrl+d          -Function DeleteCharOrExit
-Set-PSReadLineKeyHandler -Key   Ctrl+e          -Function EndOfLine
-Set-PSReadLineKeyHandler -Key   Ctrl+f          -Function ForwardChar
-Set-PSReadLineKeyHandler -Key   Ctrl+g          -Function Abort
-Set-PSReadLineKeyHandler -Key   Ctrl+n          -Function NextHistory
-Set-PSReadLineKeyHandler -Key   Ctrl+p          -Function PreviousHistory
-Set-PSReadLineKeyHandler -Key   Ctrl+w          -Function BackwardKillWord
-Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually
-Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout
+# ========== 快捷键增强（类 Linux Bash 风格） ==========
+Set-PSReadLineKeyHandler -Key   Alt+Backspace   -Function BackwardKillWord  # 删前一个单词
+Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord      # 光标跳前一个单词
+Set-PSReadLineKeyHandler -Key   Alt+d           -Function KillWord          # 删后一个单词
+Set-PSReadLineKeyHandler -Key   Alt+f           -Function ForwardWord       # 光标跳后一个单词
+Set-PSReadLineKeyHandler -Key   Ctrl+a          -Function BeginningOfLine  # 跳到行首
+Set-PSReadLineKeyHandler -Key   Ctrl+b          -Function BackwardChar     # 光标左移
+Set-PSReadLineKeyHandler -Key   Ctrl+d          -Function DeleteCharOrExit # 删除字符 / 退出
+Set-PSReadLineKeyHandler -Key   Ctrl+e          -Function EndOfLine        # 跳到行尾
+Set-PSReadLineKeyHandler -Key   Ctrl+f          -Function ForwardChar      # 光标右移
+Set-PSReadLineKeyHandler -Key   Ctrl+g          -Function Abort            # 取消当前输入
+Set-PSReadLineKeyHandler -Key   Ctrl+n          -Function NextHistory      # 下一条历史
+Set-PSReadLineKeyHandler -Key   Ctrl+p          -Function PreviousHistory  # 上一条历史
+Set-PSReadLineKeyHandler -Key   Ctrl+w          -Function BackwardKillWord # 删前一个单词
+Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually    # 用编辑器编辑当前命令
+Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout   # Ctrl+Backspace 删除单词
+
+
 
 function unzip {
     param($zipfile)
     Expand-Archive $zipfile -DestinationPath .
 }
-
-###############################################################################
-
 
 # if (Get-Command starship -ErrorAction SilentlyContinue) {
 #     Invoke-Expression (&starship init powershell)
@@ -89,3 +100,9 @@ function check-proxy {
         Write-Host "No proxy is currently set." -ForegroundColor Cyan
     }
 }
+
+Set-Alias ll ls
+Set-Alias la "ls -Force"
+Set-Alias grep Select-String
+Set-Alias which Get-Command
+Set-Alias touch New-Item
