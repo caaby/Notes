@@ -5,18 +5,27 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 # 获取当前配置文件所在目录
 $scriptDir = Split-Path -PaTh $MyInvocation.MyCommand.Definition -Parent
 
-# 加载自定义 Git 美化提示符
-import-module $scriptDir\prompt.psm1
-function prompt {
-  gitFancyPrompt
+# 不是ssh链接
+if (-not $env:SSH_CONNECTION) {
+  # 加载git美化
+  $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
+  import-module $scriptDir\prompt.psm1
+  function prompt {
+      gitFancyPrompt
+      }
+  
+  # 安装了Terminal-Icons自动加载（图标美化）
+  if (Get-Module -ListAvailable -Name Terminal-Icons) {
+      Import-Module Terminal-Icons -ErrorAction SilentlyContinue
+      }
 }
 
 # 如果安装了 Terminal-Icons，自动加载（文件图标美化）
 # 判断是否为远程 SSH 会话
-if ($env:TERM -notin @('xterm-256color', 'screen-256color', 'linux') -and
-    (Get-Module -ListAvailable -Name Terminal-Icons)) {
-    Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-    }
+# if ($env:TERM -notin @('xterm-256color', 'screen-256color', 'linux') -and
+#     (Get-Module -ListAvailable -Name Terminal-Icons)) {
+#     Import-Module Terminal-Icons -ErrorAction SilentlyContinue
+#     }
 
 
 # 加载 PSReadLine 命令行增强模块
