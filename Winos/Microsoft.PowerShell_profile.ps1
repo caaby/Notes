@@ -2,13 +2,10 @@
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
+Import-Module "$PSScriptRoot\aliases.psm1" -Force
+
 # 远程判定
 $IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
-
-
-# 远程 SSH 判定
-$IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
-
 if (-not $IsRemote) {
     Import-Module "$PSScriptRoot\prompt.psm1" -Force
     ${function:prompt} = $function:gitFancyPrompt
@@ -108,15 +105,3 @@ function check-proxy {
         Write-Host "No proxy is currently set." -ForegroundColor Cyan
     }
 }
-
-Set-Alias ll ls
-Set-Alias vim nvim
-Set-Alias grep Select-String
-Set-Alias which Get-Command
-Set-Alias touch New-Item
-
-function Run-RipGrep {
-    # default to 'smart-case' searches with '-S'
-    & (Get-Command rg -CommandType Application) -S @args
-}
-Set-Alias rg Run-RipGrep
