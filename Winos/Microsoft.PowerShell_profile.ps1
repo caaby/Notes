@@ -3,27 +3,15 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 Import-Module "$PSScriptRoot\aliases.psm1" -Force
+Import-Module "$PSScriptRoot\prompt.psm1" -Force
+${function:prompt} = $function:gitFancyPrompt
 
 # 远程判定
 $IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
-if (-not $IsRemote) {
-    Import-Module "$PSScriptRoot\prompt.psm1" -Force
-    ${function:prompt} = $function:gitFancyPrompt
 
-    if (Get-Module -ListAvailable Terminal-Icons) {
-        Import-Module Terminal-Icons -SilentlyContinue
-    }
-}
-
-
-# 安装 PANSIES，已存在则跳过
-if (-not (Get-Module -Name PANSIES -ListAvailable)) {
-    Install-Module PANSIES `
-        -AllowClobber `
-        -Scope CurrentUser `
-        -Force `
-        -Repository PSGallery `
-        -ErrorAction SilentlyContinue
+# 本地终端启用图标，SSH 远程不加载
+if (-not $IsRemote -and (Get-Module -ListAvailable Terminal-Icons)) {
+    Import-Module Terminal-Icons -ErrorAction SilentlyContinue
 }
 
 if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
