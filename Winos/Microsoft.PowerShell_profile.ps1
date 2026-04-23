@@ -2,33 +2,34 @@
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# 获取当前配置文件所在目录
-$scriptDir = Split-Path -PaTh $MyInvocation.MyCommand.Definition -Parent
+# 远程判定
+$IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
 
-# 不是ssh链接
-if (-not $env:SSH_CONNECTION) {
-  # 加载git美化
-  $scriptDir = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
-  import-module $scriptDir\prompt.psm1
-  function prompt {
-      gitFancyPrompt
-      }
-  
-  # 安装了Terminal-Icons自动加载（图标美化）
-  if (Get-Module -ListAvailable -Name Terminal-Icons) {
-      Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-      }
+
+# 远程 SSH 判定
+$IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
+
+if (-not $IsRemote) {
+    Import-Module "$PSScriptRoot\prompt.psm1" -Force
+    ${function:prompt} = $function:gitFancyPrompt
+
+    if (Get-Module -ListAvailable Terminal-Icons) {
+        Import-Module Terminal-Icons -SilentlyContinue
+    }
 }
 
-# 如果安装了 Terminal-Icons，自动加载（文件图标美化）
-# 判断是否为远程 SSH 会话
-# if ($env:TERM -notin @('xterm-256color', 'screen-256color', 'linux') -and
-#     (Get-Module -ListAvailable -Name Terminal-Icons)) {
-#     Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-#     }
+
+# 安装 PANSIES，已存在则跳过
+if (-not (Get-Module -Name PANSIES -ListAvailable)) {
+    Install-Module PANSIES `
+        -AllowClobber `
+        -Scope CurrentUser `
+        -Force `
+        -Repository PSGallery `
+        -ErrorAction SilentlyContinue
+}
 
 if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
-    # 加载 PSReadLine 命令行增强模块
     Import-Module PSReadLine
     
     # 启用 Vim 编辑模式（ESC 进入命令模式）
@@ -63,19 +64,21 @@ if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
     Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord      # 光标跳前一个单词
     Set-PSReadLineKeyHandler -Key   Alt+d           -Function KillWord          # 删后一个单词
     Set-PSReadLineKeyHandler -Key   Alt+f           -Function ForwardWord       # 光标跳后一个单词
-    # Set-PSReadLineKeyHandler -Key   Ctrl+a          -Function BeginningOfLine  # 跳到行首
     Set-PSReadLineKeyHandler -Key   Ctrl+b          -Function BackwardChar     # 光标左移
     Set-PSReadLineKeyHandler -Key   Ctrl+d          -Function DeleteCharOrExit # 删除字符 / 退出
-    # Set-PSReadLineKeyHandler -Key   Ctrl+e          -Function EndOfLine        # 跳到行尾
     Set-PSReadLineKeyHandler -Key   Ctrl+f          -Function ForwardChar      # 光标右移
     Set-PSReadLineKeyHandler -Key   Ctrl+g          -Function Abort            # 取消当前输入
     Set-PSReadLineKeyHandler -Key   Ctrl+n          -Function NextHistory      # 下一条历史
     Set-PSReadLineKeyHandler -Key   Ctrl+p          -Function PreviousHistory  # 上一条历史
-    # Set-PSReadLineKeyHandler -Key   Ctrl+w          -Function BackwardKillWord # 删前一个单词
     Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually    # 用编辑器编辑当前命令
     Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout   # Ctrl+Backspace 删除单词
 
 }
+
+# Invoke-Expression (& {
+#     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
+#     (zoxide init --hook $hook powershell --cmd j) -join "`n"
+# })
 
 function unzip {
     param($zipfile)
@@ -111,3 +114,9 @@ Set-Alias vim nvim
 Set-Alias grep Select-String
 Set-Alias which Get-Command
 Set-Alias touch New-Item
+
+function Run-RipGrep {
+    # default to 'smart-case' searches with '-S'
+    & (Get-Command rg -CommandType Application) -S @args
+}
+Set-Alias rg Run-RipGrep
