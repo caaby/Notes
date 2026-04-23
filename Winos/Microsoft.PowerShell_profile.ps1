@@ -18,7 +18,7 @@ if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
     Import-Module PSReadLine
     
     # 启用 Vim 编辑模式（ESC 进入命令模式）
-      Set-PSReadlineOption -EditMode vi
+      Set-PSReadlineOption -EditMode Emacs
       Set-PSReadlineOption -BellStyle None
     
     # 命令预测补全（根据历史记录提示）
