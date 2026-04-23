@@ -113,7 +113,7 @@ function check-proxy {
 }
 
 Set-Alias ll ls
-Set-Alias nvim vim
+Set-Alias vim nvim
 Set-Alias grep Select-String
 Set-Alias which Get-Command
 Set-Alias touch New-Item
