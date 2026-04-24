@@ -326,4 +326,8 @@ function gitFancyPrompt {
     return " "
 }
 
-Export-ModuleMember -Function gitFancyPrompt
+# Export-ModuleMember -Function gitFancyPrompt
+
+function prompt {
+    gitFancyPrompt
+}
