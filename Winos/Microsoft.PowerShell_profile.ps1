@@ -1,35 +1,27 @@
+# set PowerShell to UTF-8
+[console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
 Import-Module (Join-Path $PSScriptRoot "aliases.psm1")
 Import-Module (Join-Path $PSScriptRoot "prompt.psm1")
+Import-Module PSReadLine
 
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -EditMode Windows
+Set-PSReadlineOption -BellStyle None
 
-if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
-    Import-Module PSReadLine
-    
-    # 编辑模式（ESC Emacs进入命令模式）
-      Set-PSReadlineOption -EditMode Windows
-      Set-PSReadlineOption -BellStyle None
-    
-    # 命令预测补全（根据历史记录提示）
-    # 老版 Windows PowerShell 可能不支持，报错就注释掉下面两行
-    Set-PSReadLineOption -PredictionSource History
-    Set-PSReadLineOption -PredictionViewStyle Inline
+# Set-PSReadLineKeyHandler -Key Ctrl+a -Function MoveCursorToBeginningOfLine  # 光标移动到行首
+# Set-PSReadLineKeyHandler -Key Ctrl+e -Function MoveCursorToEndOfLine        # 光标移动到行尾
+# Set-PSReadLineKeyHandler -Key Ctrl+c -Function Abort                        # 中断当前命令
+# Set-PSReadLineKeyHandler -Key Ctrl+l -Function ClearScreen                  # 清空屏幕
+# Set-PSReadLineKeyHandler -Key Ctrl+u -Function DeleteLineBeginning          # 删除光标前的所有字符
+# Set-PSReadLineKeyHandler -Key Ctrl+k -Function DeleteLineEnding             # 删除光标后所有字符
+# Set-PSReadLineKeyHandler -Key Ctrl+w -Function UnixWordRubout               # 删除光标前的一个单词
+# Set-PSReadLineKeyHandler -Key Alt+Backspace -Function UnixWordRubout        # 删除光标前的一个单词
+# Set-PSReadLineKeyHandler -Key UpArrow -Function PreviousHistory             # 上一条历史命令
+# Set-PSReadLineKeyHandler -Key DownArrow -Function NextHistory               # 下一条历史命令
+# Set-PSReadLineKeyHandler -Key Tab -Function Complete                        # 自动补全
 
-    # Tab 键接受自动预测建议
-    Set-PSReadLineKeyHandler -Key Tab -Function AcceptSuggestion
-    # ========== 快捷键增强（类 Linux Bash 风格） ==========
-    Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord      # 光标跳前一个单词
-    Set-PSReadLineKeyHandler -Key   Alt+d           -Function KillWord          # 删后一个单词
-    Set-PSReadLineKeyHandler -Key   Alt+f           -Function ForwardWord       # 光标跳后一个单词
-    Set-PSReadLineKeyHandler -Key   Ctrl+b          -Function BackwardChar     # 光标左移
-    Set-PSReadLineKeyHandler -Key   Ctrl+d          -Function DeleteCharOrExit # 删除字符 / 退出
-    Set-PSReadLineKeyHandler -Key   Ctrl+f          -Function ForwardChar      # 光标右移
-    Set-PSReadLineKeyHandler -Key   Ctrl+g          -Function Abort            # 取消当前输入
-    Set-PSReadLineKeyHandler -Key   Ctrl+n          -Function NextHistory      # 下一条历史
-    Set-PSReadLineKeyHandler -Key   Ctrl+p          -Function PreviousHistory  # 上一条历史
-    Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually    # 用编辑器编辑当前命令
-    Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout   # Ctrl+Backspace 删除单词
-}
 
 # Invoke-Expression (& {
 #     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
