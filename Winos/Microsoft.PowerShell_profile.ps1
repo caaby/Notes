@@ -1,24 +1,13 @@
-# 设置 PowerShell 使用 UTF-8 编码
-$OutputEncoding = [System.Text.Encoding]::UTF8
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-Import-Module "$PSScriptRoot\aliases.psm1" -Force
-Import-Module "$PSScriptRoot\prompt.psm1" -Force
-${function:prompt} = $function:gitFancyPrompt
+Import-Module (Join-Path $PSScriptRoot "aliases.psm1")
+Import-Module (Join-Path $PSScriptRoot "prompt.psm1")
 
-# 远程判定
-$IsRemote = [bool]($env:SSH_CLIENT -or $env:SSH_CONNECTION -or $env:SSH_TTY)
-
-# 本地终端启用图标，SSH 远程不加载
-if (-not $IsRemote -and (Get-Module -ListAvailable Terminal-Icons)) {
-    Import-Module Terminal-Icons -ErrorAction SilentlyContinue
-}
 
 if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
     Import-Module PSReadLine
     
-    # 启用 Vim 编辑模式（ESC 进入命令模式）
-      Set-PSReadlineOption -EditMode Emacs
+    # 编辑模式（ESC Emacs进入命令模式）
+      Set-PSReadlineOption -EditMode Windows
       Set-PSReadlineOption -BellStyle None
     
     # 命令预测补全（根据历史记录提示）
@@ -28,23 +17,6 @@ if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
 
     # Tab 键接受自动预测建议
     Set-PSReadLineKeyHandler -Key Tab -Function AcceptSuggestion
-    
-    # 历史记录设置
-    Set-PSReadLineOption -HistorySearchCursorMovesToEnd  # 搜索历史时光标跳到最后
-    Set-PSReadLineOption -HistorySaveStyle SaveIncrementally  # 实时保存历史
-    Set-PSReadLineOption -MaximumHistoryCount 1000  # 最大历史记录数
-    Set-PSReadLineOption -HistoryNoDuplicates  # 不保存重复历史
-    
-    # 上下箭头 = 搜索历史命令
-    # Set-PSReadlineKeyHandler -Key   UpArrow         -Function HistorySearchBackward
-    # Set-PSReadlineKeyHandler -Key   DownArrow       -Function HistorySearchForward
-    
-    # Tab = 普通补全
-    # Set-PSReadlineKeyHandler -Key Tab -Function Complete
-    
-    # Shift+Tab = 反向补全
-    # Set-PSReadlineKeyHandler -Chord Shift+Tab -Function MenuComplete
-    
     # ========== 快捷键增强（类 Linux Bash 风格） ==========
     Set-PSReadLineKeyHandler -Key   Alt+b           -Function BackwardWord      # 光标跳前一个单词
     Set-PSReadLineKeyHandler -Key   Alt+d           -Function KillWord          # 删后一个单词
@@ -57,7 +29,6 @@ if ($null -ne (Get-Module PSReadLine -ListAvailable)) {
     Set-PSReadLineKeyHandler -Key   Ctrl+p          -Function PreviousHistory  # 上一条历史
     Set-PSReadlineKeyHandler -Chord 'Ctrl+x,Ctrl+e' -Function ViEditVisually    # 用编辑器编辑当前命令
     Set-PSReadlineKeyHandler -Key   Ctrl+Backspace  -Function UnixWordRubout   # Ctrl+Backspace 删除单词
-
 }
 
 # Invoke-Expression (& {
