@@ -6,7 +6,7 @@ Import-Module (Join-Path $PSScriptRoot "prompt.psm1")
 Import-Module PSReadLine
 
 Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -PredictionViewStyle InlineView # ListView
 Set-PSReadLineOption -EditMode vi
 Set-PSReadlineOption -BellStyle None
 
