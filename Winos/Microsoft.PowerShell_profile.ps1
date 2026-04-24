@@ -7,21 +7,20 @@ Import-Module PSReadLine
 
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
-Set-PSReadLineOption -EditMode Windows
+Set-PSReadLineOption -EditMode vi
 Set-PSReadlineOption -BellStyle None
 
-# Set-PSReadLineKeyHandler -Key Ctrl+a -Function MoveCursorToBeginningOfLine  # 光标移动到行首
-# Set-PSReadLineKeyHandler -Key Ctrl+e -Function MoveCursorToEndOfLine        # 光标移动到行尾
-# Set-PSReadLineKeyHandler -Key Ctrl+c -Function Abort                        # 中断当前命令
-# Set-PSReadLineKeyHandler -Key Ctrl+l -Function ClearScreen                  # 清空屏幕
-# Set-PSReadLineKeyHandler -Key Ctrl+u -Function DeleteLineBeginning          # 删除光标前的所有字符
-# Set-PSReadLineKeyHandler -Key Ctrl+k -Function DeleteLineEnding             # 删除光标后所有字符
-# Set-PSReadLineKeyHandler -Key Ctrl+w -Function UnixWordRubout               # 删除光标前的一个单词
-# Set-PSReadLineKeyHandler -Key Alt+Backspace -Function UnixWordRubout        # 删除光标前的一个单词
-# Set-PSReadLineKeyHandler -Key UpArrow -Function PreviousHistory             # 上一条历史命令
-# Set-PSReadLineKeyHandler -Key DownArrow -Function NextHistory               # 下一条历史命令
-# Set-PSReadLineKeyHandler -Key Tab -Function Complete                        # 自动补全
+Set-PSReadLineKeyHandler -Key "Ctrl+a" -Function BeginningOfLine -ViMode Insert  # 光标移动到行首
+Set-PSReadLineKeyHandler -Key "Ctrl+e" -Function EndOfLine -ViMode Insert        # 光标移动到行尾
+Set-PSReadLineKeyHandler -Key "Ctrl+b" -Function BackwardChar -ViMode Insert     # 光标左移
+Set-PSReadLineKeyHandler -Key "Ctrl+f" -Function ForwardChar -ViMode Insert      # 光标右移
+Set-PSReadLineKeyHandler -Key "Ctrl+k" -Function ForwardDeleteLine -ViMode Insert # 删除光标后所有字符
+Set-PSReadLineKeyHandler -Key "Ctrl+w" -Function BackwardKillWord -ViMode Insert  # 删除光标前的一个单词
+# Set-PSReadLineKeyHandler -Key "Ctrl+u" -Function BackwardDeleteLine -ViMode Insert  # 删除光标前的所有字符
 
+Set-PSReadLineKeyHandler -Key Escape -ScriptBlock {
+    [Microsoft.PowerShell.PSConsoleReadLine]::ViCommandMode()
+} -ViMode Insert
 
 # Invoke-Expression (& {
 #     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
