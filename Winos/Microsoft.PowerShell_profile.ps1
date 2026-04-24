@@ -4,6 +4,7 @@
 Import-Module (Join-Path $PSScriptRoot "aliases.psm1")
 Import-Module (Join-Path $PSScriptRoot "prompt.psm1")
 Import-Module PSReadLine
+Import-Module DirColors
 
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle InlineView # ListView
